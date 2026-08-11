@@ -14,19 +14,26 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
+      - name: Show project files
+        run: |
+          echo "CURRENT DIRECTORY:"
+          pwd
+          echo "ROOT FILES:"
+          ls -la
+          echo "LIB FILES:"
+          ls -la lib || true
+          echo "MAIN DART:"
+          ls -la lib/main.dart || true
+          echo "PUBSPEC:"
+          ls -la pubspec.yaml || true
+
       - name: Setup Flutter
         uses: subosito/flutter-action@v2
         with:
           flutter-version: '3.35.2'
           channel: 'stable'
 
-      - name: Check project
-        run: |
-          pwd
-          ls -la
-          test -f pubspec.yaml
-
-      - name: Flutter pub get
+      - name: Get packages
         run: flutter pub get
 
       - name: Build APK
@@ -37,3 +44,4 @@ jobs:
         with:
           name: WorldLive-APK
           path: build/app/outputs/flutter-apk/app-release.apk
+          if-no-files-found: error
