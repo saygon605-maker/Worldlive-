@@ -1,0 +1,1 @@
+Firebase config added to android/app/google-services.json. Android package aligned to com.worldlive.App. Run flutter pub get then flutter run.
