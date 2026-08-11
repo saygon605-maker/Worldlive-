@@ -1,32 +1,13 @@
-name: Build WorldLive APK
+- name: Flutter pub get
+  working-directory: ./worldlive
+  run: flutter pub get
 
-on:
-  workflow_dispatch:
-  push:
-    branches:
-      - main
+- name: Build APK
+  working-directory: ./worldlive
+  run: flutter build apk --release
 
-jobs:
-  build:
-    runs-on: ubuntu-latest
-
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-
-      - name: Setup Flutter
-        uses: subosito/flutter-action@v2
-        with:
-            flutter-version: '3.35.2'
-
-      - name: Flutter pub get
-        run: flutter pub get
-
-      - name: Build APK
-        run: flutter build apk --release
-
-      - name: Upload APK
-        uses: actions/upload-artifact@v4
-        with:
-          name: WorldLive-APK
-          path: build/app/outputs/flutter-apk/app-release.apk
+- name: Upload APK
+  uses: actions/upload-artifact@v4
+  with:
+    name: WorldLive-APK
+    path: worldlive/build/app/outputs/flutter-apk/app-release.apk
