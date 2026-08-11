@@ -14,6 +14,11 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
+      - name: Find Flutter project
+        run: |
+          echo "Files in repository:"
+          find . -name pubspec.yaml -print
+
       - name: Setup Flutter
         uses: subosito/flutter-action@v2
         with:
@@ -21,15 +26,21 @@ jobs:
           channel: 'stable'
 
       - name: Flutter pub get
-        working-directory: ./worldlive
-        run: flutter pub get
+        run: |
+          PROJECT_DIR=$(dirname "$(find . -name pubspec.yaml -print -quit)")
+          echo "Project directory: $PROJECT_DIR"
+          cd "$PROJECT_DIR"
+          flutter pub get
 
       - name: Build APK
-        working-directory: ./worldlive
-        run: flutter build apk --release
+        run: |
+          PROJECT_DIR=$(dirname "$(find . -name pubspec.yaml -print -quit)")
+          echo "Project directory: $PROJECT_DIR"
+          cd "$PROJECT_DIR"
+          flutter build apk --release
 
       - name: Upload APK
         uses: actions/upload-artifact@v4
         with:
           name: WorldLive-APK
-          path: worldlive/build/app/outputs/flutter-apk/app-release.apk
+          path: '**/build/app/outputs/flutter-apk/app-release.apk'
