@@ -14,33 +14,26 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Find Flutter project
-        run: |
-          echo "Files in repository:"
-          find . -name pubspec.yaml -print
-
       - name: Setup Flutter
         uses: subosito/flutter-action@v2
         with:
           flutter-version: '3.35.2'
           channel: 'stable'
 
-      - name: Flutter pub get
+      - name: Check project
         run: |
-          PROJECT_DIR=$(dirname "$(find . -name pubspec.yaml -print -quit)")
-          echo "Project directory: $PROJECT_DIR"
-          cd "$PROJECT_DIR"
-          flutter pub get
+          pwd
+          ls -la
+          test -f pubspec.yaml
+
+      - name: Flutter pub get
+        run: flutter pub get
 
       - name: Build APK
-        run: |
-          PROJECT_DIR=$(dirname "$(find . -name pubspec.yaml -print -quit)")
-          echo "Project directory: $PROJECT_DIR"
-          cd "$PROJECT_DIR"
-          flutter build apk --release
+        run: flutter build apk --release
 
       - name: Upload APK
         uses: actions/upload-artifact@v4
         with:
           name: WorldLive-APK
-          path: '**/build/app/outputs/flutter-apk/app-release.apk'
+          path: build/app/outputs/flutter-apk/app-release.apk
